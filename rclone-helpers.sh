@@ -31,7 +31,7 @@ _queue_unlock() {
 
 rcp_help() {
   # Display help and usage examples for all rcp_* commands
-  cat << 'EOF'
+  cat << EOF
 ╭─────────────────────────────────────────────────────────────────────╮
 │                    RCLONE HELPERS - QUICK REFERENCE                 │
 ╰─────────────────────────────────────────────────────────────────────╯
@@ -667,10 +667,11 @@ rcp_queue() {
   # Add a transfer command to the queue
   # Usage: rcp_queue rcp_tv <args...>
   #        rcp_queue rcp_movie <args...>
+  #        rcp_queue rcp_audiobook <args...>
   # Example: rcp_queue rcp_tv "Show.S01.1080p" "Breaking Bad/Season 01"
   
   if [ $# -lt 2 ]; then
-    echo "Usage: rcp_queue <rcp_tv|rcp_movie|rcp_verify> <args...>" >&2
+    echo "Usage: rcp_queue <rcp_tv|rcp_movie|rcp_audiobook|rcp_verify> <args...>" >&2
     return 1
   fi
   

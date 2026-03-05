@@ -176,22 +176,6 @@ _sanitize() {
     | tr -cd 'A-Za-z0-9_.-'
 }
 
-_newest() {
-  # Pick newest file from a glob safely
-  # Usage: _newest <glob1> [<glob2> ...]
-  # Echoes the newest existing file among the globs
-  local candidates=() f
-  for g in "$@"; do
-    # shellcheck disable=SC2086
-    for f in $g; do
-      [ -e "$f" ] && candidates+=("$f")
-    done
-  done
-  [ ${#candidates[@]} -eq 0 ] && return 1
-  # Use ls -1t for simplicity; avoids parsing stat with busybox differences
-  ls -1t "${candidates[@]}" 2>/dev/null | head -n1
-}
-
 _rcp_copy() {
   # Internal helper: start an rclone copy in the background
   # Usage: _rcp_copy <seedbox_path> <dest_root> "<dest_rel>" [mode]
@@ -213,7 +197,7 @@ _rcp_copy() {
   nhout="$RCLONE_LOGDIR/rclone_${tag}_${stamp}.nohup.out"
 
   echo "→ Starting rclone:"
-  echo "   src : seedboxSFTP:$src"
+  echo "   src : $RCLONE_REMOTE:$src"
   echo "   dest: $dest"
   echo "   log : $log"
 
@@ -325,7 +309,7 @@ rcp_movie() {
   # Optimized for single large files: 1 transfer with 8 streams, only chunks files >1GB
   local subpath="$1" dest_rel="$2"
   if [ -z "$subpath" ] || [ -z "$dest_rel" ]; then
-    echo 'Usage: rcp_movie <seedbox_subpath> "<Title (Year")>' >&2
+    echo 'Usage: rcp_movie <seedbox_subpath> "<Title (Year)>"' >&2
     return 1
   fi
   local full_src="${SEEDBOX_BASE%/}/${subpath#/}"
@@ -630,28 +614,30 @@ rcp_flushlogs() {
   newest_log="$(ls -1t "$RCLONE_LOGDIR"/rclone_*.log 2>/dev/null | head -n1)"
   newest_nohup="$(ls -1t "$RCLONE_LOGDIR"/rclone_*.nohup.out 2>/dev/null | head -n1)"
   
-  local count=0
-  
+  local count=0 f
+
   # Delete all .log files except the newest
   if [ -n "$newest_log" ]; then
     echo "Keeping newest log: ${newest_log##*/}"
-    ls -1t "$RCLONE_LOGDIR"/rclone_*.log 2>/dev/null | while IFS= read -r f; do
+    for f in "$RCLONE_LOGDIR"/rclone_*.log; do
+      [ -f "$f" ] || continue
       if [ "$f" != "$newest_log" ]; then
         rm -f "$f" && count=$((count + 1))
       fi
     done
   fi
-  
+
   # Delete all .nohup.out files except the newest
   if [ -n "$newest_nohup" ]; then
     echo "Keeping newest nohup: ${newest_nohup##*/}"
-    ls -1t "$RCLONE_LOGDIR"/rclone_*.nohup.out 2>/dev/null | while IFS= read -r f; do
+    for f in "$RCLONE_LOGDIR"/rclone_*.nohup.out; do
+      [ -f "$f" ] || continue
       if [ "$f" != "$newest_nohup" ]; then
         rm -f "$f" && count=$((count + 1))
       fi
     done
   fi
-  
+
   if [ $count -eq 0 ]; then
     echo "No old logs to delete."
   else

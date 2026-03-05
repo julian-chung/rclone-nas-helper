@@ -54,6 +54,26 @@ export RCLONE_REMOTE="mySeedbox"
 . /volume1/homes/admin/rclone-helpers.sh
 ```
 
+## Deploying to your NAS
+
+`deploy.sh` pushes `rclone-helpers.sh` to the remote host over SSH, creating a timestamped backup of any existing file and keeping only the 10 most recent backups.
+
+```sh
+# Default host alias is "synology"
+bash deploy.sh
+
+# Or pass a hostname / SSH alias
+bash deploy.sh nas.local
+```
+
+Then add this line to `~/.profile` on the NAS if it isn't there already:
+
+```sh
+. ~/.rclone-helpers
+```
+
+**BusyBox note:** If you find sourcing a separate file unreliable at login (a known BusyBox ash quirk), paste the contents of `rclone-helpers.sh` directly into `~/.profile` instead. In that case, update `SRC` and `DEST` at the top of `deploy.sh` to match your local `.profile` and `~/.profile` on the NAS.
+
 ## Usage
 
 ### Transfer commands

@@ -51,7 +51,7 @@ Example override in `~/.profile`:
 ```sh
 export SEEDBOX_BASE="/mnt/yourslot/files"
 export RCLONE_REMOTE="mySeedbox"
-. /volume1/homes/admin/rclone-helpers.sh
+. /volume1/homes/youruser/rclone-helpers.sh
 ```
 
 ## Deploying to your NAS

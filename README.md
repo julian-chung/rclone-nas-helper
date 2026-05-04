@@ -1,6 +1,6 @@
 # rclone-nas-helper
 
-Shell functions for copying media from a remote seedbox to a Synology NAS using rclone. Designed to be BusyBox-compatible (Synology DSM ships with BusyBox ash, not bash).
+Shell functions for copying media from a remote seedbox to a Synology NAS using rclone. Designed to be BusyBox compatible (Synology DSM ships with BusyBox ash, not bash).
 
 Features:
 - Three transfer modes tuned for TV, movies, and audiobooks

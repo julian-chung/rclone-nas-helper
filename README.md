@@ -14,13 +14,13 @@ Features:
 - [rclone](https://rclone.org/) installed and in `PATH` (`/usr/bin` or `/usr/local/bin`)
 - A configured rclone remote pointing at your seedbox (SFTP or similar)
 - Synology DSM (BusyBox ash) or any POSIX shell with `awk`, `ls`, `ps`, `find`
-- `less` is optional — used by `rcp_progress --follow`; falls back gracefully if absent
+- `less` is optional - used by `rcp_progress --follow`; falls back if absent
 
 ## Setup
 
 ### 1. Configure rclone
 
-Create a remote named `seedboxSFTP` (or whatever you prefer — update `RCLONE_REMOTE` below):
+Create a remote named `seedboxSFTP` (or whatever you prefer - update `RCLONE_REMOTE` below):
 
 ```sh
 rclone config
